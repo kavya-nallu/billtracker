@@ -1,0 +1,493 @@
+/* --- Clean White & Olive Theme --- */
+body {
+  background-color: #ffffff; /* Pure White Background */
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  font-family: 'Inter', 'Segoe UI', sans-serif;
+  color: #1b2611; /* Deep Olive Text */
+}
+
+.container {
+  width: 100%;
+  max-width: 500px;
+  margin: 40px 20px;
+  padding: 30px;
+  background: #ffffff; 
+  border-radius: 30px;
+  /* Soft grey shadow to define the white container on white body */
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05); 
+  border: 1px solid #f0f0f0;
+  border-top: 10px solid #556b2f; /* Olive Green Top Accent */
+  box-sizing: border-box;
+}
+
+h1 {
+  text-align: center;
+  font-size: 24px;
+  font-weight: 800;
+  color: #556b2f; /* Olive Green */
+  margin-bottom: 25px;
+}
+
+/* --- Olive Balance Card --- */
+.balance-card {
+  background: #556b2f; 
+  color: #ffffff; 
+  padding: 25px;
+  border-radius: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+}
+
+.balance-amount {
+  font-size: 30px;
+  font-weight: 900;
+}
+
+/* --- Form Controls & Olive Buttons --- */
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+input, select {
+  width: 100%;
+  height: 48px;
+  padding: 0 15px;
+  background: #fdfdfd;
+  border: 2px solid #e2e8da;
+  border-radius: 12px;
+  font-size: 15px;
+  color: #1b2611;
+  box-sizing: border-box;
+}
+
+input:focus, select:focus {
+  outline: none;
+  border-color: #556b2f;
+}
+
+/* THE OLIVE BUTTONS WITH WHITE BORDER */
+.btn-primary {
+  background: #556b2f; 
+  color: #ffffff;
+  padding: 15px;
+  border-radius: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  border: 2px solid #ffffff; /* White Border */
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.btn-primary:hover {
+  background: #ffffff; /* White Background on hover */
+  color: #556b2f;      /* Olive Text on hover */
+  border: 2px solid #556b2f; /* Olive Border on hover */
+  transform: translateY(-2px);
+}
+
+/* --- Expense List --- */
+.expense-list-container {
+  max-height: 300px;
+  overflow-y: auto;
+  border: 1px solid #e2e8da;
+  border-radius: 16px;
+  margin-top: 10px;
+}
+
+.expense-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 20px;
+  border-bottom: 1px solid #f0f2ed;
+}
+
+/* --- History Grid --- */
+.history-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+  margin-top: 15px;
+}
+
+.history-card {
+  background: #ffffff;
+  border: 2px solid #e2e8da;
+  padding: 15px;
+  border-radius: 18px;
+  cursor: pointer;
+  position: relative;
+  transition: 0.3s;
+}
+
+.history-card:hover {
+  border-color: #556b2f;
+  transform: translateY(-3px);
+}
+
+/* --- Utility Buttons --- */
+.download-all-btn {
+  background-color: #556b2f;
+  color: #ffffff;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 11px;
+  font-weight: bold;
+  border: 1px solid #ffffff;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.download-all-btn:hover {
+  background-color: #ffffff;
+  color: #556b2f;
+  border: 1px solid #556b2f;
+}
+
+.btn-black {
+  background: #1a1a1a;
+  color: #ffffff;
+  width: 100%;
+  padding: 14px;
+  border-radius: 12px;
+  margin-top: 10px;
+  border: 2px solid #ffffff;
+}
+
+.btn-black:hover {
+  background: #ffffff;
+  color: #1a1a1a;
+  border: 2px solid #1a1a1a;
+}
+/* Container to hold both buttons in the top-right corner */
+.card-actions {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: flex;
+  gap: 5px;
+}
+
+/* Style for the mini download icon */
+.mini-download-btn {
+  background: #556b2f; /* Olive Green */
+  color: white;
+  border: 1px solid white;
+  border-radius: 50%;
+  width: 26px;
+  height: 26px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  transition: 0.2s;
+}
+
+.mini-download-btn:hover {
+  background: white;
+  color: #556b2f;
+  border: 1px solid #556b2f;
+}
+
+/* Ensure the history card can contain the absolute buttons */
+.history-card {
+  position: relative;
+  /* ... your existing card styles ... */
+}
+/* ... Keep all your previous CSS ... */
+
+.traveler-section {
+  margin: 15px 0;
+  text-align: left;
+}
+
+.traveler-section label {
+  font-size: 13px;
+  font-weight: bold;
+  color: #556b2f;
+  display: block;
+  margin-bottom: 8px;
+}
+
+.plus-btn {
+  background: #556b2f;
+  color: white;
+  border: 2px solid white;
+  border-radius: 10px;
+  width: 50px;
+  height: 50px;
+  cursor: pointer;
+  font-size: 24px;
+  transition: 0.3s;
+}
+
+.plus-btn:hover {
+  background: white;
+  color: #556b2f;
+  border: 2px solid #556b2f;
+}
+
+.date-input {
+  cursor: pointer;
+  text-transform: uppercase;
+  font-size: 12px;
+}
+.fade-in {
+  animation: fadeIn 0.4s ease-in;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.olive-form input {
+  margin-bottom: 8px; /* Tighter spacing for multi-inputs */
+}
+.food-details {
+    background: #f9fbf2;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px dashed #556b2f;
+    margin-bottom: 10px;
+}
+
+.plus-btn-small {
+    background: #556b2f;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    width: 30px;
+    height: 40px;
+    cursor: pointer;
+    font-size: 18px;
+}
+
+.btn-back {
+    margin-top: 15px;
+    background: none;
+    color: #556b2f;
+    border: 1px solid #556b2f;
+    padding: 5px 15px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: bold;
+}
+.sub-form {
+    background: #fdfdfd;
+    padding: 15px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.radio-group {
+    display: flex;
+    justify-content: space-around;
+    padding: 10px 0;
+    font-weight: bold;
+    color: #556b2f;
+}
+
+.radio-group label {
+    cursor: pointer;
+}
+
+.delete-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    color: #bc4749;
+}
+.datetime-row {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    margin-bottom: 10px;
+}
+
+.datetime-row label {
+    font-size: 11px;
+    font-weight: bold;
+    color: #556b2f;
+    margin-left: 5px;
+}
+
+.datetime-row input {
+    margin-top: 2px;
+}
+
+.sub-form {
+    border: 1px solid #dce2c8;
+    background-color: #fafbf8;
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+.btn-download-main {
+    margin-top: 10px;
+    background: #556b2f;
+    color: white;
+    border: none;
+    width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.btn-download-main:hover {
+    background: #3e4e22;
+}
+
+.history-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.history-card {
+    background: white;
+    padding: 15px;
+    border-radius: 12px;
+    border: 1px solid #e0e0e0;
+    position: relative;
+    cursor: pointer;
+}
+.item-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.edit-btn {
+    background: #f1f1f1;
+    border: 1px solid #ccc;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.edit-btn:hover {
+    background: #e0e0e0;
+}
+
+.expense-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 12px;
+    border-bottom: 1px solid #eee;
+    background: #fff;
+}
+.live-list {
+    margin-top: 20px;
+    background: #fff;
+    border-radius: 12px;
+    padding: 15px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+
+.edit-btn {
+    background: #e9ecef;
+    border: 1px solid #ced4da;
+    padding: 5px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+.edit-btn:hover { background: #dee2e6; }
+
+.expense-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid #f1f1f1;
+}
+
+.plus-btn-small {
+    background: #556b2f;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    width: 30px;
+    height: 40px;
+    cursor: pointer;
+}
+
+.sub-form {
+    background: #fafbf8;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #dce2c8;
+    margin-bottom: 10px;
+}
+
+.datetime-row {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    margin-bottom: 10px;
+}
+.history-section {
+    margin-top: 30px;
+}
+
+.history-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 15px;
+    margin-top: 15px;
+}
+
+.history-card {
+    background: #fff;
+    padding: 15px;
+    border-radius: 12px;
+    border: 1px solid #ddd;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.history-card:hover {
+    border-color: #556b2f;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.history-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.delete-icon {
+    background: #ffeded;
+    color: #bc4749;
+    border: none;
+    border-radius: 50%;
+    width: 25px;
+    height: 25px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.delete-icon:hover {
+    background: #bc4749;
+    color: white;
+}
