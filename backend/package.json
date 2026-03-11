@@ -17,6 +17,7 @@
     "express": "^5.2.1",
     "jspdf": "^4.2.0",
     "jspdf-autotable": "^5.0.7",
-    "mongoose": "^9.2.4"
+    "mongoose": "^9.2.4",
+    "multer": "^2.1.1"
   }
 }
