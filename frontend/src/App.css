@@ -1,68 +1,119 @@
-:root {
-  --bg-color: #f4f7f6;
-  --card-bg: #ffffff;
-  --text-main: #333333;
-  --text-sub: #666666;
-  --primary-olive: #556b2f; /* Olive Green */
-  --accent-color: #8fbc8f; /* Dark Sea Green */
-  --danger: #bc4749;
-  --border-color: #dddddd;
+/* --- 🚀 FIXED CYBER TECH (DAY/NIGHT WORKING) --- */
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@400;700&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
+/* DEFAULT: LIGHT MODE (Day) */
+:root {
+  --bg-main: #ffffff;
+  --card-bg: #fdfdfd;
+  --border-dim: #e0e0e0;
+  --border-bright: #cccccc;
+  --text-primary: #000000;
+  --text-secondary: #666666;
+  --neon-olive: #556b2f;
+  --danger-neon: #d32f2f;
+}
+
+/* WHEN .dark-theme IS ADDED (Night) */
 .dark-theme {
-  --bg-color: #121212;
-  --card-bg: #1e1e1e;
-  --text-main: #e0e0e0;
-  --text-sub: #b0b0b0;
-  --primary-olive: #6b8e23; /* Brighter Olive */
-  --accent-color: #3e4a3d;
-  --border-color: #333333;
+  --bg-main: #000000;
+  --card-bg: #0a0a0a;
+  --border-dim: #222222;
+  --border-bright: #444444;
+  --text-primary: #ffffff;
+  --text-secondary: #888888;
+  --neon-olive: #d4e157; /* Electric Olive for Dark */
+  --danger-neon: #ff4d4d;
 }
 
 body {
-  background-color: var(--bg-color);
-  color: var(--text-main);
-  transition: all 0.3s ease;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  margin: 0;
+  font-family: 'Inter', sans-serif;
+  background-color: var(--bg-main);
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
+  transition: background 0.3s ease, color 0.3s ease;
 }
 
 .container {
-  max-width: 500px;
-  margin: auto;
-  padding: 20px;
+  max-width: 520px;
+  margin: 40px auto;
+  padding: 0 20px;
 }
 
-/* Updated Card Styles to use Variables */
-.input-group, .history-card, .balance-card, .expense-item, .auth-box {
-  background: var(--card-bg);
-  border: 1px solid var(--border-color);
-  color: var(--text-main);
-  padding: 20px;
-  border-radius: 15px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+/* --- ⚡ SHARP CARDS --- */
+.input-group, .history-card, .balance-card, .expense-item, .auth-box, .sub-form {
+  background-color: var(--card-bg);
+  border: 1px solid var(--border-dim);
+  border-radius: 8px;
+  padding: 24px;
   margin-bottom: 20px;
+  transition: border-color 0.2s ease, background 0.3s ease;
 }
 
+.history-card:hover {
+  border-color: var(--neon-olive);
+}
+
+/* --- ⌨️ MONOSPACE INPUTS --- */
 input, select {
+  font-family: 'JetBrains Mono', monospace;
   width: 100%;
   padding: 12px;
   margin: 10px 0;
-  border: 1px solid var(--border-color);
-  border-radius: 8px;
-  background: var(--card-bg);
-  color: var(--text-main);
+  border: 1px solid var(--border-dim);
+  background: var(--bg-main);
+  color: var(--text-primary);
+  border-radius: 4px;
+  outline: none;
 }
 
+input:focus {
+  border-color: var(--neon-olive);
+}
+
+/* --- 🔘 BUTTONS --- */
 .btn-primary {
-  background-color: var(--primary-olive);
-  color: white;
-  width: 100%;
-  padding: 12px;
+  background: var(--neon-olive);
+  color: #000;
+  padding: 14px;
   border: none;
-  border-radius: 8px;
+  border-radius: 4px;
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 13px;
+  letter-spacing: 0.1em;
   cursor: pointer;
-  font-weight: bold;
+  width: 100%;
+}
+
+.dark-theme .btn-primary {
+    color: #000; /* Keep text black on neon button in dark mode */
+}
+
+/* --- 📊 BALANCE & HEALTH --- */
+.balance-card {
+  border: 1.5px solid var(--neon-olive);
+}
+
+.balance-amount {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: var(--neon-olive);
+}
+
+.health-danger { border-color: var(--danger-neon) !important; box-shadow: 0 0 10px var(--danger-neon); }
+
+/* --- 📋 LISTS --- */
+.expense-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 /* Theme Toggle Button Style */
@@ -71,9 +122,4 @@ input, select {
   border: none;
   font-size: 1.5rem;
   cursor: pointer;
-  transition: transform 0.5s ease;
-}
-
-.theme-btn:hover {
-  transform: rotate(360deg);
 }

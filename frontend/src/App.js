@@ -15,12 +15,13 @@ function App() {
   const [authData, setAuthData] = useState({ username: '', password: '' });
   
   const [trip, setTrip] = useState(null);
-  const [showStats, setShowStats] = useState(false); // NEW: State for stats view
+  const [showStats, setShowStats] = useState(false); 
   const [history, setHistory] = useState([]);
   const [currentDay, setCurrentDay] = useState(1);
   const [totalDays, setTotalDays] = useState(1);
   const [editingId, setEditingId] = useState(null);
   const [selectedFile, setSelectedFile] = useState(null);
+  const [joinCodeInput, setJoinCodeInput] = useState(''); // NEW: Shared Invite State
 
   const [formData, setFormData] = useState({ tripName: '', totalBudget: '', startDate: '', endDate: '', travelers: [] });
   const [expense, setExpense] = useState({ 
@@ -51,7 +52,22 @@ function App() {
     }
   }, [trip]);
 
-  // --- NEW: Chart Data Logic ---
+  // --- NEW: Budget Health Alert Logic ---
+  const getBudgetHealth = () => {
+    if (!trip || trip.expenses.length === 0) return { status: 'healthy', color: '#556b2f', msg: '✅ Budget looks good!' };
+    const totalSpent = trip.expenses.reduce((s, ex) => s + (Number(ex.amount) + (Number(ex.tip) || 0)), 0);
+    const timeProgress = (currentDay / totalDays); 
+    const moneyUsage = (totalSpent / trip.totalBudget); 
+    if (moneyUsage > timeProgress + 0.2) {
+        return { status: 'danger', color: '#bc4749', msg: '⚠️ Spending too fast! Slow down.' };
+    } else if (moneyUsage > timeProgress) {
+        return { status: 'warning', color: '#f4a261', msg: '⚡ You are slightly over budget pace.' };
+    }
+    return { status: 'healthy', color: '#556b2f', msg: '✅ You are on track!' };
+  };
+
+  const health = getBudgetHealth();
+
   const getChartData = () => {
     if (!trip || !trip.expenses) return [];
     const categoryTotals = trip.expenses.reduce((acc, ex) => {
@@ -60,11 +76,7 @@ function App() {
       acc[name] = (acc[name] || 0) + value;
       return acc;
     }, {});
-
-    return Object.keys(categoryTotals).map(cat => ({
-      name: cat,
-      value: categoryTotals[cat]
-    }));
+    return Object.keys(categoryTotals).map(cat => ({ name: cat, value: categoryTotals[cat] }));
   };
 
   const COLORS = ['#556b2f', '#8fbc8f', '#bc4749', '#4a4e69', '#f4a261', '#2a9d8f'];
@@ -85,6 +97,20 @@ function App() {
     } catch (err) { alert("Auth Failed"); }
   };
 
+  // NEW: Join Trip Function
+  const joinTrip = async () => {
+    if (!joinCodeInput) return alert("Enter a code");
+    try {
+      const res = await axios.post(`${BASE_URL}/trips/join`, { 
+        userId: user.userId, 
+        joinCode: joinCodeInput 
+      });
+      setTrip(res.data);
+      setJoinCodeInput('');
+      fetchHistory();
+    } catch (err) { alert("Invalid Code or Trip already joined"); }
+  };
+
   const handleListChange = (type, i, val) => {
     const newList = [...(expense[type] ?? [])];
     newList[i] = val;
@@ -94,17 +120,13 @@ function App() {
   const addExpense = async () => {
     if (!expense.category || !expense.paidBy) return alert("Select Category & Payer");
     let finalAmt = Number(expense.amount) || 0;
-    
     if (expense.category === 'Travel' && ['Car', 'Bike'].includes(expense.vehicleType)) {
         finalAmt += Number(expense.fuelPrice) || 0;
     }
-
     const data = new FormData();
     data.append('data', JSON.stringify({ ...expense, amount: finalAmt, dayNumber: currentDay }));
     if (selectedFile) data.append('bill', selectedFile);
-
     const url = editingId ? `${BASE_URL}/trips/${trip._id}/update-expense/${editingId}` : `${BASE_URL}/trips/${trip._id}/expense`;
-    
     try {
       const res = await axios.put(url, data);
       setTrip(res.data);
@@ -127,10 +149,8 @@ function App() {
     const doc = new jsPDF();
     const totalSpent = t.expenses.reduce((s, ex) => s + (Number(ex.amount) + (Number(ex.tip)||0)), 0);
     const share = totalSpent / (t.travelers.length || 1);
-
     doc.setFontSize(22); doc.setTextColor(85, 107, 47);
     doc.text(`TRIP REPORT: ${t.tripName.toUpperCase()}`, 14, 20);
-    
     let y = 35;
     for (let i = 1; i <= totalDays; i++) {
       const dayEx = t.expenses.filter(ex => ex.dayNumber === i);
@@ -141,14 +161,11 @@ function App() {
         y = doc.lastAutoTable.finalY + 12;
       }
     }
-
     const finalY = y + 10;
     doc.setFontSize(14); doc.text("FINANCIAL SUMMARY", 14, finalY);
-    doc.setFontSize(10);
     doc.text(`Initial Budget: RS ${t.totalBudget}`, 14, finalY + 8);
     doc.text(`Total Spent: RS ${totalSpent.toFixed(2)}`, 14, finalY + 14);
     doc.text(`Balance Remaining: RS ${t.remainingBudget.toFixed(2)}`, 14, finalY + 20);
-
     const settY = finalY + 30;
     doc.text("GROUP SETTLEMENT", 14, settY);
     const settlementRows = t.travelers.map(name => {
@@ -157,7 +174,6 @@ function App() {
       return [name, `RS ${paid.toFixed(2)}`, diff >= 0 ? `Gets back RS ${diff.toFixed(2)}` : `Owes RS ${Math.abs(diff).toFixed(2)}` ];
     });
     autoTable(doc, { head: [['Traveler', 'Paid', 'Status']], body: settlementRows, startY: settY + 5, headStyles: {fillColor:[85, 107, 47]} });
-
     doc.save(`${t.tripName}_Report.pdf`);
   };
 
@@ -202,6 +218,14 @@ function App() {
             ))}
             <button className="btn-primary" onClick={() => axios.post(`${BASE_URL}/trips`, {...formData, userId: user.userId}).then(res => setTrip(res.data))}>Start Trip</button>
           </div>
+
+          {/* NEW: JOIN TRIP BOX */}
+          <div className="input-group" style={{border: '2px dashed var(--primary-olive)'}}>
+            <h3>Join Friend's Trip</h3>
+            <input placeholder="Enter 6-digit Join Code" value={joinCodeInput} onChange={e => setJoinCodeInput(e.target.value)} />
+            <button className="btn-primary" onClick={joinTrip}>Join Now 🤝</button>
+          </div>
+
           <div className="history-grid">
             {history.map(t => (
               <div key={t._id} className="history-card" onClick={() => {setTrip(t); setCurrentDay(1); setShowStats(false);}}>
@@ -213,9 +237,24 @@ function App() {
         </div>
       ) : (
         <div className="fade-in">
-          <div className="balance-card">
-            <h2>{trip.tripName} - Day {currentDay} of {totalDays}</h2>
-            <div className="balance-amount">₹{trip.remainingBudget} Left</div>
+          {/* Invite Code Display */}
+          <div style={{textAlign: 'center', marginBottom: '10px'}}>
+            <span style={{fontSize: '12px', background: 'var(--accent-color)', padding: '5px 12px', borderRadius: '15px', color:'white'}}>
+              Invite Code: <b>{trip.joinCode}</b>
+            </span>
+          </div>
+
+          <div className={`balance-card health-${health.status}`}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+              <div>
+                <h2>{trip.tripName} - Day {currentDay}</h2>
+                <p style={{ color: health.color, fontWeight: 'bold', margin: '5px 0' }}>{health.msg}</p>
+              </div>
+              <div className="balance-amount">₹{trip.remainingBudget} Left</div>
+            </div>
+            <div style={{ background: 'rgba(200,200,200,0.3)', height: '10px', borderRadius: '5px', marginTop: '10px', overflow: 'hidden' }}>
+              <div style={{ width: `${(trip.remainingBudget / trip.totalBudget) * 100}%`, height: '100%', background: health.color, transition: 'width 0.5s ease' }}></div>
+            </div>
           </div>
 
           {!trip.isFinished ? (
@@ -282,7 +321,6 @@ function App() {
                 )}
 
                 {expense.category === 'Other' && <input placeholder="Category Name" value={expense.customCategory} onChange={e => setExpense({...expense, customCategory: e.target.value})} />}
-
                 {expense.category !== 'Travel' && expense.category !== '' && <input type="number" placeholder="Amount (₹)" value={expense.amount} onChange={e => setExpense({...expense, amount: e.target.value})} />}
 
                 <button className="btn-primary" onClick={addExpense}>{editingId ? "Update Entry" : `Save Day ${currentDay} Entry`}</button>
@@ -315,15 +353,12 @@ function App() {
           ) : (
             <div style={{textAlign:'center', marginTop:'50px'}}>
                 <h1>🎉 Journey Complete!</h1>
-                
-                {/* --- NEW: Stats Section --- */}
                 <div style={{display:'flex', gap:'10px', justifyContent:'center', flexWrap:'wrap'}}>
                   <button className="btn-download-main" onClick={() => downloadPDF(trip)}>📥 Download Bill</button>
                   <button className="btn-primary" style={{width:'auto', padding:'10px 20px', backgroundColor:'#8fbc8f'}} onClick={() => setShowStats(!showStats)}>
                     {showStats ? "📊 Hide Stats" : "📊 View Stats"}
                   </button>
                 </div>
-
                 {showStats && (
                   <div className="history-card" style={{marginTop:'30px', padding:'20px', height:'400px'}}>
                     <h3>Spending Breakdown</h3>
@@ -349,7 +384,6 @@ function App() {
                     </ResponsiveContainer>
                   </div>
                 )}
-                
                 <br/><button className="btn-back" onClick={() => {setTrip(null); setCurrentDay(1); setShowStats(false);}}>Return to Dashboard</button>
             </div>
           )}
